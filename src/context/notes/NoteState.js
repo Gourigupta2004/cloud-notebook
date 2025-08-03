@@ -22,7 +22,6 @@ const NoteState = (props) => {
     });
     //Recieved response
     const json = await response.json();
-
     setNotes(json);
   };
 
@@ -57,6 +56,7 @@ const NoteState = (props) => {
     });
 
     const json = await response.json();
+    console.log(json);
 
     const newNotes = notes.filter((note) => {
       return note._id !== id;
@@ -78,6 +78,7 @@ const NoteState = (props) => {
     });
 
     const json = await response.json();
+    console.log(json);
 
     let newNotes = JSON.parse(JSON.stringify(notes));
     //Logic to edit in client
