@@ -6,11 +6,12 @@ const AddNote = () => {
   //Destructuring states from noteContext
   const {addNote} = context;
 
-  const [note, setNote] = useState({title: "", description: "", tag: "default"});
+  const [note, setNote] = useState({title: "", description: "", tag: ""});
 
   const handleClick =(e) =>{
     e.preventDefault();
     addNote(note.title, note.description, note.tag);
+    setNote({title: "", description: "", tag: ""});
   }
 
   const onChange = (e) => {
@@ -33,6 +34,9 @@ const AddNote = () => {
             name='title'
             aria-describedby="emailHelp"
             onChange={onChange}
+            minLength={5}
+            value={note.title}
+            required
           />
         </div>
         <div className="mb-3">
@@ -45,15 +49,20 @@ const AddNote = () => {
             id="description"
             name = "description"
             onChange={onChange}
+            minLength={5}
+            value={note.description}
+            required
           />
         </div>
-        <div className="mb-3 form-check">
-          <input type="checkbox" className="form-check-input" id="exampleCheck1" />
-          <label className="form-check-label" htmlFor="exampleCheck1">
-            Check me out
+      
+        <div className="mb-3">
+          <label className="form-label" htmlFor="tag">
+            Tag
           </label>
+          <input type="text" className="form-control" id="tag" name="tag" value={note.tag} onChange={onChange}/>
         </div>
-        <button type="submit" className="btn btn-primary" onClick={handleClick}>
+        
+        <button type="submit" disabled={note.title.length<5 || note.description.length<5} className="btn btn-primary" onClick={handleClick}>
           Add Note
         </button>
       </form>
