@@ -20,12 +20,13 @@ const NoteState = (props) => {
           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjg3YzkxZmNlNmQ4ZGY2MDIyYjZhZTE0In0sImlhdCI6MTc1MzA1NzczMX0.BBrA1QbDOPXWwYK7ItD0Tipz_ASa6yQp_fJtAhDeRVY",
       },
     });
+
     //Recieved response
     const json = await response.json();
     setNotes(json);
   };
 
-  //Add a Note
+  //Add a New Note
   const addNote = async (title, description, tag) => {
     //API Call
     const response = await fetch(`${host}/api/notes/addnote`, {
