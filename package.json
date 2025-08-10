@@ -19,7 +19,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "server": "npm run --prefix backend-inotebook dev",
+    "server": "npm run --prefix backend dev",
     "both": "concurrently \"npm run start\" \"npm run server\""
   },
   "eslintConfig": {

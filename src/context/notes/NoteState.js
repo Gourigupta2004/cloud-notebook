@@ -16,8 +16,7 @@ const NoteState = (props) => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "auth-token":
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjg3YzkxZmNlNmQ4ZGY2MDIyYjZhZTE0In0sImlhdCI6MTc1MzA1NzczMX0.BBrA1QbDOPXWwYK7ItD0Tipz_ASa6yQp_fJtAhDeRVY",
+          "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjg5ODBmOGI4YWI3MDI4NzMxZDkwODE3In0sImlhdCI6MTc1NDgwODUwOH0.bwyGdwCLlojQi4pKP4EuotJh2OfgLyJstdf-n2ARUWE"
       },
     });
 
