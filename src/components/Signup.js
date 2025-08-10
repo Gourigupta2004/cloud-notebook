@@ -1,109 +1,107 @@
-import React from "react";
-import {useNavigate } from "react-router-dom";
-import { useState } from "react";
-
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Signup = (props) => {
+  const [credentials, setCredentials] = useState({
+    name: "",
+    email: "",
+    password: "",
+    cpassword: "",
+  });
 
-const [credentials, setCredentials] = useState({name:"", email:"", password:"", cpassword:""});
+  let navigate = useNavigate();
 
-let navigate = useNavigate();
-
-  const handleSubmit = async(e) =>{
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const {name, email, password} = credentials;
+    const { name, email, password } = credentials;
     const response = await fetch(`http://localhost:5000/api/auth/createuser`, {
-
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({name, email, password}),
-  });
+      body: JSON.stringify({ name, email, password }),
+    });
 
     const json = await response.json();
     console.log(json);
 
-    if(json.success){
-      //Save the auth token and redirect
-      localStorage.setItem('token', json.authToken);
+    if (json.success) {
+      localStorage.setItem("token", json.authToken);
       navigate("/");
-      props.showAlert('Account created successfully', 'success');
-
+      props.showAlert("Account created successfully", "success");
     } else {
-      props.showAlert('Invalid credentials', 'danger');
+      props.showAlert("Invalid credentials", "danger");
     }
-}
+  };
 
-const onChange = (e) => {
-  setCredentials({...credentials, [e.target.name]:e.target.value});
-}
-
+  const onChange = (e) => {
+    setCredentials({ ...credentials, [e.target.name]: e.target.value });
+  };
 
   return (
-    <div className="container mt-2">
-      <h2 className="my-3">Create an account to use Cloud Notebook</h2>
+    <div
+      className="container mt-3 p-3"
+      style={{
+        maxWidth: "450px",
+        backgroundColor: "#fffaf0",
+        border: "2px dashed #8a2be2",
+        borderRadius: "15px",
+        fontFamily: "'Patrick Hand', cursive",
+        boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+      }}
+    >
+      <h2
+        className="text-center mb-3"
+        style={{ color: "#8a2be2", fontWeight: "bold", fontSize: "1.5rem" }}
+      >
+        ✏️ Create an account to use Cloud Notebook
+      </h2>
       <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label htmlFor="name" className="form-label">
-            Name
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="name"
-            aria-describedby="emailHelp"
-            onChange={onChange}
-            name="name"
-          />
-        </div>
-
-        <div className="mb-3">
-          <label htmlFor="exampleInputEmail1" className="form-label">
-            Email address
-          </label>
-          <input
-            type="email"
-            className="form-control"
-            id="exampleInputEmail1"
-            aria-describedby="emailHelp"
-            onChange={onChange}
-            name="email"
-          />
-          <div id="emailHelp" className="form-text">
-            We'll never share your email with anyone else.
+        {["name", "email", "password", "cpassword"].map((field) => (
+          <div className="mb-2" key={field}>
+            <label
+              htmlFor={field}
+              className="form-label"
+              style={{ fontSize: "1rem" }}
+            >
+              {field === "cpassword" ? "Confirm Password" : field.charAt(0).toUpperCase() + field.slice(1)}
+            </label>
+            <input
+              type={field.includes("password") ? "password" : "text"}
+              className="form-control"
+              id={field}
+              name={field}
+              onChange={onChange}
+              required
+              minLength={field.includes("password") ? 5 : undefined}
+              style={{
+                border: "2px dashed #8a2be2",
+                borderRadius: "10px",
+                fontFamily: "'Patrick Hand', cursive",
+                padding: "6px 8px",
+                fontSize: "1rem",
+                height: "36px",
+              }}
+            />
           </div>
-        </div>
-        <div className="mb-3">
-          <label htmlFor="password" className="form-label">
-            Password
-          </label>
-          <input
-            type="password"
-            className="form-control"
-            id="password"
-            onChange={onChange}
-            required
-            minLength={5}
-            name="password"
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="cpassword" className="form-label">
-            Confirm Password
-          </label>
-          <input
-            type="password"
-            className="form-control"
-            id="cpassword"
-            onChange={onChange}
-            required
-            minLength={5}
-            name="cpassword"
-          />
-        </div>
-        
-        <button type="submit" className="btn btn-primary">
+        ))}
+
+        <button
+          type="submit"
+          className="btn w-100"
+          style={{
+            backgroundColor: "#8a2be2",
+            color: "#fff",
+            border: "2px dashed #444",
+            borderRadius: "20px",
+            fontWeight: "bold",
+            padding: "7px",
+            fontSize: "1.05rem",
+            transition: "transform 0.2s ease",
+          }}
+          onMouseOver={(e) => (e.target.style.transform = "scale(1.05)")}
+          onMouseOut={(e) => (e.target.style.transform = "scale(1)")}
+        >
           Submit
         </button>
       </form>

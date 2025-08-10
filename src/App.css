@@ -36,3 +36,19 @@
     transform: rotate(360deg);
   }
 }
+
+body {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 1.5rem; /* ~10% bigger than default */
+}
+.navbar-brand {
+  font-size: 2rem !important; /* Make brand name pop */
+}
+.nav-link {
+  font-size: 1.5rem !important;
+}
+.btn {
+  font-size: 1.3rem !important;
+}
+
+
