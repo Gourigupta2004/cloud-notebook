@@ -41,8 +41,9 @@ const onChange = (e) => {
 
 
   return (
-    <div>
-      <form className="container" onSubmit={handleSubmit}>
+    <div className="container mt-2">
+      <h2 className="my-3">Create an account to use Cloud Notebook</h2>
+      <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="name" className="form-label">
             Name

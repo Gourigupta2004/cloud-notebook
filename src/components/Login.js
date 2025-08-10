@@ -35,7 +35,8 @@ const onChange = (e) => {
 
 
   return (
-    <div>
+    <div className="container mt-3">
+      <h2>Login to continue to Cloud Notebook</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="email" className="form-label">
