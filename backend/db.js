@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+require('dotenv').config();
+// backend/db.js
 
 const mongoURI = process.env.MONGO_URI;
 
