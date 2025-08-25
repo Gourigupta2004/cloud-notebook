@@ -57,7 +57,7 @@ const Signup = (props) => {
         ✏️ Create an account to use Cloud Notebook
       </h2>
       <form onSubmit={handleSubmit}>
-        {["name", "email", "password", "cpassword"].map((field) => (
+        {["name", "email", "password"].map((field) => (
           <div className="mb-2" key={field}>
             <label
               htmlFor={field}
