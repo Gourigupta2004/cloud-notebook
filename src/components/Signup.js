@@ -1,12 +1,21 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-  const host =
-    (typeof window !== "undefined" &&
-      (window.location.hostname === "localhost" ||
-       window.location.hostname === "127.0.0.1"))
-      ? "http://localhost:5000"
-      : "";
+// ✅ localhost in dev; same-origin in prod (Render)
+const host =
+  (typeof window !== "undefined" &&
+    (window.location.hostname === "localhost" ||
+     window.location.hostname === "127.0.0.1"))
+    ? "http://localhost:5000"
+    : "";
+
+// Safely parse JSON or fall back to text
+const parsePayload = async (res) => {
+  const ct = res.headers.get("content-type") || "";
+  if (ct.includes("application/json")) return res.json();
+  const text = await res.text();
+  return { success: false, error: text || `HTTP ${res.status}` };
+};
 
 const Signup = (props) => {
   const [credentials, setCredentials] = useState({
@@ -21,23 +30,27 @@ const Signup = (props) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { name, email, password } = credentials;
-    const response = await fetch(`${host}/api/auth/createuser`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name, email, password }),
-    });
 
-    const json = await response.json();
-    console.log(json);
+    try {
+      const response = await fetch(`${host}/api/auth/createuser`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
+      });
 
-    if (json.success) {
-      localStorage.setItem("token", json.authToken);
-      navigate("/");
-      props.showAlert("Account created successfully", "success");
-    } else {
-      props.showAlert("Invalid credentials", "danger");
+      const json = await parsePayload(response);
+      console.log(json);
+
+      if (response.ok && json.success) {
+        localStorage.setItem("token", json.authToken);
+        navigate("/");
+        props.showAlert("Account created successfully", "success");
+      } else {
+        props.showAlert(json.error || "Invalid credentials", "danger");
+      }
+    } catch (err) {
+      console.error("Signup error:", err);
+      props.showAlert("Network error. Please try again.", "danger");
     }
   };
 
@@ -71,7 +84,9 @@ const Signup = (props) => {
               className="form-label"
               style={{ fontSize: "1rem" }}
             >
-              {field === "cpassword" ? "Confirm Password" : field.charAt(0).toUpperCase() + field.slice(1)}
+              {field === "cpassword"
+                ? "Confirm Password"
+                : field.charAt(0).toUpperCase() + field.slice(1)}
             </label>
             <input
               type={field.includes("password") ? "password" : "text"}

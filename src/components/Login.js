@@ -1,13 +1,21 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
-  // ✅ localhost in dev; relative /api in production (Render)
-  const host =
-    (typeof window !== "undefined" &&
-      (window.location.hostname === "localhost" ||
-       window.location.hostname === "127.0.0.1"))
-      ? "http://localhost:5000"
-      : "";
+// ✅ localhost in dev; same-origin in prod (Render)
+const host =
+  (typeof window !== "undefined" &&
+    (window.location.hostname === "localhost" ||
+     window.location.hostname === "127.0.0.1"))
+    ? "http://localhost:5000"
+    : "";
+
+// Safely parse JSON or fall back to text
+const parsePayload = async (res) => {
+  const ct = res.headers.get("content-type") || "";
+  if (ct.includes("application/json")) return res.json();
+  const text = await res.text();
+  return { success: false, error: text || `HTTP ${res.status}` };
+};
 
 const Login = (props) => {
   const [credentials, setCredentials] = useState({ email: "", password: "" });
@@ -15,24 +23,29 @@ const Login = (props) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch(`${host}/api/auth/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: credentials.email,
-        password: credentials.password,
-      }),
-    });
-    const json = await response.json();
-    console.log(json);
-    if (json.success) {
-      localStorage.setItem("token", json.authToken);
-      navigate("/");
-      props.showAlert("Logged in successfully", "success");
-    } else {
-      props.showAlert("Invalid credentials", "danger");
+    try {
+      const response = await fetch(`${host}/api/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: credentials.email,
+          password: credentials.password,
+        }),
+      });
+
+      const json = await parsePayload(response);
+      console.log(json);
+
+      if (response.ok && json.success) {
+        localStorage.setItem("token", json.authToken);
+        navigate("/");
+        props.showAlert("Logged in successfully", "success");
+      } else {
+        props.showAlert(json.error || "Invalid credentials", "danger");
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      props.showAlert("Network error. Please try again.", "danger");
     }
   };
 
