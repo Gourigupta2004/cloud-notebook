@@ -3,7 +3,12 @@ import { useState } from "react";
 import NoteContext from "./noteContext";
 
 const NoteState = (props) => {
-  const host = "http://localhost:5000";
+const host =
+    (typeof window !== "undefined" &&
+      (window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1"))
+      ? "http://localhost:5000"
+      : "";
 
   //States to change & update notes
   const noteInitial = [];
